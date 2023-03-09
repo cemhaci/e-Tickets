@@ -1,0 +1,44 @@
+﻿
+@model List<Actor>
+@{
+    ViewData["title"] = "list os Actors";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <table class="table" style="margin-top:30px;">
+            <thead">
+                <tr>
+                    <th>Profile</th>
+                    <th>Full Name</th>
+                    <th>Biography</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model)
+                    {
+                    <tr>
+                        <td class="align-middle"><img class="rounded-circle" src="@item.ProfilePictureUrl" width="150" height="150" style="max-height:150px;" /></td>
+                        <td class="align-middle">
+                            @item.FullName
+                        </td>
+
+                        <td class="align-middle">@item.Bio</td>
+                        <td class="align-middle">
+                            <a href="/Actor/Edit/@item.id" class="btn btn-outline-primary"><i class="fa fa-pencil-square"></i>Edit</a>
+                            <a href="/Actor/Details/@item.id" class="btn btn-outline-info"> <i class="fa fa-eye"></i>Details</a>
+
+                            <a href="/Actor/Delete/@item.id" class="btn btn-outline-danger"><i class="fa fa-trash"></i>Delete</a>
+
+                            
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+                <div class="text-white" style="position:fixed; bottom:25px; right:90px;">
+                    <a href="/Actor/Create" class="btn btn-success"><i class="fa fa-plus-circle"></i>Add New</a>
+                </div>
+        </table>
+    </div>
+</div>

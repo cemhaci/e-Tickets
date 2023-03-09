@@ -1,0 +1,100 @@
+﻿@model Cinema
+@{
+    ViewData["Title"] = "Edit A New Cinema";
+}
+
+<div class="row text">
+
+    <div class="col-md-8 offset-2 container-fluid bg-dark text-light p-5 mt-5">
+        <p>
+            <h1>@ViewData["Title"]</h1>
+        </p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-3 offset-2">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="None" class="text-danger">
+                </div>
+
+                <br />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" style="max-width:300px;">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" aria-label="Bio" style="max-width:300px;"></textarea>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="logo" class="control-label"></label>
+                    <input asp-for="logo" type="text" style="max-width:300px;" class="form-control" name="profileImage" id="profileImg" disabled>
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="logo" class="control-label">Add Profile Picture</label>
+                    <input asp-for="logo" type="file" style="max-width:300px;" data-secim="txt" class="form-control" name="profileImage1" id="profileImg1">
+                    <span asp-validation-for="logo" class="text-danger"></span>
+                </div>
+
+                <br />
+                <hr />
+                <div class="input-group">
+                    <a href="Cinema/Index" class="btn btn-outline-secondary" style="border-radius:5px;">Show All</a>
+                    <input type="submit" value="Edit" class="btn btn-outline-success float-end" style="position:relative; left:250px; border-radius:5px;" />
+
+                </div>
+
+            </form>
+        </div>
+
+        <div class="col-md-6 align-content-center my-5">
+            <img class="rounded-circle" src="" style="max-height:250px; max-width:250px;" alt="pic" id="profileview" />
+        </div>
+
+
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        if ($('#profileImg1') != null) {
+            $(document).ready(() => {
+                $('#profileImg1').change(function () {
+                    const file = this.files[0];
+                    console.log(file);
+                    if (file) {
+                        let reader = new FileReader();
+                        reader.onload = function (event) {
+                            console.log(event.target.result);
+                            $('#profileview').attr('src', event.target.result);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                    var text = $('input[type=file]').val().split('\\').pop(); //split gelen uzantıyı slaş olarak ayırıyor . pop da slaşdan öncekileri siliyor.diretk dosya adını alıyor
+                    console.log(text);
+                    $("#profileImg").val(text); //
+                });
+            });
+
+
+        }
+
+        $(document).ready(function () {
+            var output = document.getElementById('profileview');
+            output.src = $("#profileImg").val();
+        })
+
+        $("#profileImg").on("change", function () {
+            var output = document.getElementById('profileview');
+            output.src = $(this).val();
+        })
+
+
+    </script>
+}
