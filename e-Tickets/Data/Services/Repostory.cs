@@ -45,10 +45,14 @@ namespace e_Tickets.Data.Services
 			_context.SaveChanges();
 			return newentity;
 		}
-  //      public List<T> Search(T Filter)
+		public T Find(Expression<Func<T, bool>> condition)
+		{
+			return _object.FirstOrDefault(condition);
+		}
+		//      public List<T> Search(T Filter)
 		//{
 
-  //          return _object.Where(x=>x.);
-  //      }
-    }
+		//          return _object.Where(x=>x.);
+		//      }
+	}
 }

@@ -10,6 +10,7 @@ namespace e_Tickets.Data.Services
         void Add(T entity);
         T Update(T newentity);
         void Delete(int id);
-        //List<T> Search(T Filter);
-    }
+        T Find(Expression<Func<T, bool>> kosul);
+		//List<T> Search(T Filter);
+	}
 }

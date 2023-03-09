@@ -29,9 +29,10 @@ namespace e_Tickets.Controllers
         {
             if(ModelState.IsValid)
             {
-
-
-                var extent = Path.GetExtension(profileImage.FileName);
+                var actors = _actor.Find(x=>x.FullName==actor.FullName);
+                if (actors != null)
+                {
+      var extent = Path.GetExtension(profileImage.FileName);
                 var randomName = ($"{Guid.NewGuid()}{extent}");
 
                 //var paths = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Image", randomName);
@@ -47,8 +48,15 @@ namespace e_Tickets.Controllers
 
                 _actor.Add(actor);
                
-
+                    
                 return RedirectToAction("Actor");
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(actor.FullName), "This actor is already registered");
+                    return View();  
+                }
+          
             }
             return View(actor);
         }

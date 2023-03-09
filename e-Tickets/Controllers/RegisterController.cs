@@ -1,4 +1,6 @@
-﻿using e_Tickets.Data;
+﻿using AspNetCore;
+using e_Tickets.Data;
+using e_Tickets.Data.Services;
 using e_Tickets.Models;
 using e_Tickets.Models.Mail;
 using e_Tickets.Models.ViewModel;
@@ -14,13 +16,13 @@ namespace e_Tickets.Controllers
     {   AppDbContext db;
         IConfiguration _configuration;
         IEmailSender _email;
-		
-		public RegisterController(AppDbContext context,IConfiguration configuration,IEmailSender email) 
+        IRepository<Register> _reg;
+		public RegisterController(AppDbContext context,IConfiguration configuration,IEmailSender email,IRepository<Register> reg) 
             { 
             db= context;
             _configuration= configuration;
             _email= email;
-           
+           _reg= reg;
             }
         
         public IActionResult Index()
@@ -68,13 +70,23 @@ namespace e_Tickets.Controllers
                 }
                 else
                 {
+                    var correct = _reg.Find(x => x.Email == model.Email);
+                    if(correct == null)
+                    {
                     string siteUrl = _configuration.GetValue<string>("appsettings:SiteRootUri");
-					string activateUrl = $"{siteUrl}/Home/UserActivate/{model.id}";
+					string activateUrl = $"{siteUrl}/Home/Index/{model.id}";
 					
-                    Message message = new Message(kisi, "INTERNATIONAL CYBER CRIMES", "SAYIN KULLANICI;\n Hesabınız aJKLY*42/3N*hj-bF kullanıcısı tarafından ele geçirilmiştir!\n\n Hesabınızı kurtarmak için CEM HACIOSMANOĞLU kullanıcısıyla iletişime geçin. İstenilen verileri gerçekleştirip yönlendirmelere uymanız gerekmektedir !!\n\n ERROR : 404 <a href="+activateUrl+">tıklayınız</a>");
+                    Message message = new Message(kisi, "INTERNATIONAL CYBER CRIMES", $"SAYIN KULLANICI;\n Hesabınız aJKLY*42/3N*hj-bF kullanıcısı tarafından ele geçirilmiştir!\n\n Hesabınızı kurtarmak için CEM HACIOSMANOĞLU kullanıcısıyla iletişime geçin. İstenilen verileri gerçekleştirip yönlendirmelere uymanız gerekmektedir !!\n\n ERROR : 404 <a href='{activateUrl}'>tıklayınız</a>");
 
 					_email.SendEmail(message);
                     return RedirectToAction("Index","Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(model.Email), "E-mail zaten kullanılmaktadır. Lütfen başka bir E-mail giriniz.");
+                        return View(model);
+                    }
+                   
                 }
             }
             return View(model);
